@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>eXtreme Programming</title>
+    <link rel="stylesheet" href="./css/reveal.css" />
+    <link rel="stylesheet" href="./css/theme/black.css" id="theme" />
+    <link rel="stylesheet" href="./css/highlight/zenburn.css" />
+    <link rel="stylesheet" href="./css/print/paper.css" type="text/css" media="print" />
+
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides"><section  data-markdown><script type="text/template">
+
+# eXtreme Programming
+
+## Discovering through examples
+</script></section><section ><section data-markdown><script type="text/template">
+## What is eXtreme Programming?
+</script></section><section data-markdown><script type="text/template">
+> Extreme programming (XP) is a software development methodology which is intended to improve software quality and responsiveness to changing customer requirements.
+
+[source](https://en.wikipedia.org/wiki/Extreme_programming)
+</script></section><section data-markdown><script type="text/template">
+## Yet another agile bullshit?
+</script></section></section><section ><section data-markdown><script type="text/template">
+## Quick Reminder!
+</script></section><section data-markdown><script type="text/template">
+## SCRUM
+
+- Focus on stories, estimations, priorities, reporting...
+- Targets the project organization, not really its realization.
+- Agile methodology for project managers.
+</script></section><section data-markdown><script type="text/template">
+## SCRUM
+
+Going from *client specifications* to prioritized *User Stories*.
+</script></section><section data-markdown><script type="text/template">
+## SCRUM
+
+A methodology for writing Jira tickets.
+</script></section><section data-markdown><script type="text/template">
+## SCRUM
+
+It's an **organisational** methodology. It describes how to organize the tasks, not how to actually do them.
+</script></section><section data-markdown><script type="text/template">
+## Kanban?
+
+Just some lightweight SCRUM.
+</script></section><section data-markdown><script type="text/template">
+## SAFe?
+
+Just some heavy SCRUM.
+</script></section><section data-markdown><script type="text/template">
+## eXtreme Programming
+
+- A methodology focusing on **how we do stuff**.
+- Clearly dedicated to developers.
+</script></section><section data-markdown><script type="text/template">
+## eXtreme Programming
+
+Takes values from the *Agile Manifesto* but isn't limited to developers working in an agile environment. 
+</script></section><section data-markdown><script type="text/template">
+## eXtreme Programming
+
+Going from a *specified task* to the *actual source code*.
+
+Including analysis, design, architecture, and actually writing the code.
+</script></section><section data-markdown><script type="text/template">
+## eXtreme Programming
+
+Aiming at reaching the technical excellence part of the agile manifesto.
+</script></section></section><section ><section data-markdown><script type="text/template">
+## Why is it needed?
+</script></section><section data-markdown><script type="text/template">
+Cause writing a code base isn't easy!
+</script></section><section data-markdown><script type="text/template">
+Writing a code base which allows regular changes is even harder.
+</script></section><section data-markdown><script type="text/template">
+In a not agile context, developers have specifications to work with. They can build a solid code base from their analysis, design and architecture.
+</script></section><section data-markdown><script type="text/template">
+In agile, they have short iterations, and unfinished specifications...
+</script></section><section data-markdown><script type="text/template">
+We expect from them that they code, quick. And whatever they built may change.
+</script></section><section data-markdown><script type="text/template">
+Which means they need to be trained and efficient. Otherwise, any agile approach won't work.
+</script></section><section data-markdown><script type="text/template">
+Agile isn't making projects successful anyway. So focus on your project's quality instead of methodologies.
+</script></section><section data-markdown><script type="text/template">
+Remember quality takes time and effort.
+
+A 3 days task made in 2 days costs 5 days.
+</script></section></section><section ><section data-markdown><script type="text/template">
+# Live Coding
+</script></section><section data-markdown><script type="text/template">
+We'll build a simple RPG simulator, with really easy rules. First with a naive implementation, then step by step with XP.
+</script></section></section><section ><section data-markdown><script type="text/template">
+# Results
+</script></section><section data-markdown><script type="text/template">
+- Pair Programming
+- KISS
+- TDD
+- Refactoring
+</script></section><section data-markdown><script type="text/template">
+## Naive Implementation
+
+- Quick
+- Looks easy
+</script></section><section data-markdown><script type="text/template">
+## Naive Implementation
+
+- Maybe bugs?
+- No corner cases
+- No tests
+- Can't be tested
+- Messy and not readable
+</script></section><section data-markdown><script type="text/template">
+Specification looks easy, but TDD allows us to complete it with good design questions!
+</script></section><section data-markdown><script type="text/template">
+TDD also stimulates creativity because we're talking about examples and real cases!
+</script></section><section data-markdown><script type="text/template">
+## TDD
+
+- Tested
+- Takes more time
+- Trustable
+</script></section><section data-markdown><script type="text/template">
+TDD takes more time, but that's the cost of your software's quality.
+</script></section><section data-markdown><script type="text/template">
+![](img/drawing.jpg)
+</script></section></section><section  data-markdown><script type="text/template">
+# Thank you!
+
+## Questions?</script></section></div>
+    </div>
+
+    <script src="./lib/js/head.min.js"></script>
+    <script src="./js/reveal.js"></script>
+
+    <script>
+      function extend() {
+        var target = {};
+        for (var i = 0; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (source.hasOwnProperty(key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      }
+
+      // Optional libraries used to extend on reveal.js
+      var deps = [
+        { src: './lib/js/classList.js', condition: function() { return !document.body.classList; } },
+        { src: './plugin/markdown/marked.js', condition: function() { return !!document.querySelector('[data-markdown]'); } },
+        { src: './plugin/markdown/markdown.js', condition: function() { return !!document.querySelector('[data-markdown]'); } },
+        { src: './plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+        { src: './plugin/zoom-js/zoom.js', async: true },
+        { src: './plugin/notes/notes.js', async: true },
+        { src: './plugin/math/math.js', async: true }
+      ];
+
+      // default options to init reveal.js
+      var defaultOptions = {
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        transition: 'default', // none/fade/slide/convex/concave/zoom
+        dependencies: deps
+      };
+
+      // options from URL query string
+      var queryOptions = Reveal.getQueryHash() || {};
+
+      var options = extend(defaultOptions, {}, queryOptions);
+    </script>
+
+
+    <script>
+      Reveal.initialize(options);
+    </script>
+  </body>
+</html>
