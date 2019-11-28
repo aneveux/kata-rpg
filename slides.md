@@ -165,7 +165,19 @@ We'll build a simple RPG simulator, with really easy rules. First with a naive i
 
 ----
 
-Specification looks easy, but TDD allows us to complete it with good design questions!
+Our specification looks just fine isn't it?
+
+---
+
+Remember DEEP and INVEST?
+
+---
+
+Well, it's not detailed enough and moreover it's not testable!
+
+---
+
+TDD allows us to spot problem and to fix them!
 
 ----
 
