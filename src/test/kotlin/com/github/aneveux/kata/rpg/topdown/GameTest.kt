@@ -283,5 +283,91 @@ class GameTest : StringSpec() {
         // The tests would probably require some refactoring as well, but we'll do a cleanup afterwards.
         // We won't modify both the tests and the code at the same time.
 
+        // Okay, let's start with identifying more easily when a battle is over
+
+        "A battle is over when its last round is a final one" {
+            val paladin = Character(10, 2, 1, 0)
+            val battle = Battle(paladin, paladin)
+            battle.isOver() shouldBe false
+            battle.nextState().isOver() shouldBe true
+        }
+
+        // Refactoring clearly is needed, but we'll go forward (just to keep track on all the changes in the same file)
+        // The refactoring and cleanup will be done in a separate package for illustration
+
+        // Right now, we are able to perform the battle, and simulate it till the end. Only thing we would need, is
+        // a way to retrieve the result of the battle.
+        // Basically, we've got 2 ways of ending the battle, either a tie, or a victory.
+        // Let's start with a tie: if both characters died.
+
+        "The result of a finished battle with 2 dead characters is a tie" {
+            val paladin = Character(10, 2, 1, 0)
+            val battle = Battle(paladin, paladin)
+            battle.nextState().result() shouldBe Battle.Result.TIE
+        }
+
+        // If only one of the characters dies, this is a victory!
+
+        "The result of a finished battle with only 1 dead character is a victory" {
+            val paladin = Character(10, 2, 1, 0)
+            val wizard = Character(10, 2, 1, 1000)
+            val battle = Battle(paladin, wizard)
+            battle.nextState().result() shouldBe Battle.Result.VICTORY
+        }
+
+        // OK, with some refactoring, it could be nice to be able to retrieve the winner if the result is a victory.
+        // Let's have another method to do so (it would disappear with refactoring, but again, we're keeping every step
+        // here to understand the progression)
+
+        "If the result is a victory, it should allow to retrieve the winner" {
+            val paladin = Character(10, 2, 1, 0)
+            val wizard = Character(10, 2, 1, 1000)
+            val battle = Battle(paladin, wizard)
+            battle.nextState().results() shouldBe Battle.Results.Victory(wizard)
+        }
+
+        // We now have a new structure, so let's just ensure we have everything else working in it
+
+        "If no characters is left alive, the results of the battle should be a tie" {
+            val paladin = Character(10, 2, 1, 0)
+            val battle = Battle(paladin, paladin)
+            battle.nextState().results() shouldBe Battle.Results.Tie
+        }
+
+        "If no characters is dead yet, the results of the battle should be ongoing" {
+            val paladin = Character(10, 2, 1, 1000)
+            val battle = Battle(paladin, paladin)
+            battle.nextState().results() shouldBe Battle.Results.Ongoing
+        }
+
+        "If no rounds are generated yet, the battle results should be not started" {
+            val paladin = Character(10, 2, 1, 0)
+            val battle = Battle(paladin, paladin)
+            battle.results() shouldBe Battle.Results.NotStarted
+        }
+
+        // Now we see that some functions could be moved here and there, but again, refactoring clearly is needed.
+        // Let's focus on what we need. We didn't implement the fact that some kind of characters are stronger against
+        // one another. Time to see if our code allows some easy additions!
+
+        // First, we need something allowing to represent the types of characters and give their multiplier
+
+        "Paladins deal 50% more damages to Rogues" {
+            multiplier(CharacterType.PALADIN, CharacterType.ROGUE) shouldBe 1.5
+        }
+
+        "Rogues deal 50% more damages to Wizards" {
+            multiplier(CharacterType.ROGUE, CharacterType.WIZARD) shouldBe 1.5
+        }
+
+        "Wizards deal 50% more damages to Paladins" {
+            multiplier(CharacterType.WIZARD, CharacterType.PALADIN) shouldBe 1.5
+        }
+
+        "Other combinations of characters type deal no additional damages" {
+            multiplier(CharacterType.ROGUE, CharacterType.PALADIN) shouldBe 1.0
+            multiplier(CharacterType.PALADIN, CharacterType.WIZARD) shouldBe 1.0
+            multiplier(CharacterType.WIZARD, CharacterType.ROGUE) shouldBe 1.0
+        }
     }
 }

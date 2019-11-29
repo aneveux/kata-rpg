@@ -2,6 +2,18 @@ package com.github.aneveux.kata.rpg.topdown
 
 import org.jetbrains.annotations.TestOnly
 
+enum class CharacterType {
+    PALADIN, ROGUE, WIZARD
+}
+
+fun multiplier(firstCharacterType: CharacterType, secondCharacterType: CharacterType) =
+    when (firstCharacterType to secondCharacterType) {
+        CharacterType.PALADIN to CharacterType.ROGUE -> 1.5
+        CharacterType.ROGUE to CharacterType.WIZARD -> 1.5
+        CharacterType.WIZARD to CharacterType.PALADIN -> 1.5
+        else -> 1.0
+    }
+
 data class Character(val power: Int, val damages: Int, val resistance: Int, val hp: Int) {
     val attackDamage
         get() = power * damages
@@ -26,6 +38,33 @@ data class Battle(val firstPlayer: Character, val secondPlayer: Character, val r
             )
         )
     ) else if (rounds.last().isFinal) this else copy(rounds = rounds.plusElement(rounds.last().nextRound()))
+
+    fun isOver() = rounds.isNotEmpty() && rounds.last().isFinal
+
+    enum class Result {
+        TIE, ONGOING, VICTORY
+    }
+
+    sealed class Results {
+        object NotStarted : Results()
+        object Ongoing : Results()
+        object Tie : Results()
+        data class Victory(val winner: Character) : Results()
+    }
+
+    fun analyze(round: Round) = with(round) {
+        when {
+            !isFinal -> Results.Ongoing
+            firstPlayer.isAlive -> Results.Victory(firstPlayer)
+            secondPlayer.isAlive -> Results.Victory(secondPlayer)
+            else -> Results.Tie
+        }
+    }
+
+    fun results() = if (rounds.isEmpty()) Results.NotStarted else analyze(rounds.last())
+
+    fun result() =
+        if (isOver() && !rounds.last().firstPlayer.isAlive && !rounds.last().secondPlayer.isAlive) Result.TIE else if (isOver() && (rounds.last().firstPlayer.isAlive || rounds.last().secondPlayer.isAlive)) Result.VICTORY else Result.ONGOING
 }
 
 data class Round(val firstPlayer: Character, val secondPlayer: Character) {
