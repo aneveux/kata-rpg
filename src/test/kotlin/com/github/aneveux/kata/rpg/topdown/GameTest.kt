@@ -1,5 +1,6 @@
 package com.github.aneveux.kata.rpg.topdown
 
+import io.kotlintest.matchers.numerics.shouldBeGreaterThan
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 
@@ -11,8 +12,8 @@ class GameTest : StringSpec() {
         // Our test is basically testing nothing at this point, but it describes entry points.
 
         "Characters are fighting each others during a battle" {
-            val wizard = Character(0, 0, 0, 0)
-            val paladin = Character(0, 0, 0, 0)
+            val wizard = Character(0, 0, 0, 0, CharacterType.PALADIN) { damages }
+            val paladin = Character(0, 0, 0, 0, CharacterType.PALADIN) { damages }
             Battle(wizard, paladin)
         }
 
@@ -21,7 +22,13 @@ class GameTest : StringSpec() {
         // Let's put that in our model!
 
         "Characters may inflict damages to each others depending on their power" {
-            val wizard = Character(power = 10, damages = 5, resistance = 0, hp = 0)
+            val wizard = Character(
+                power = 10,
+                damages = 5,
+                resistance = 0,
+                hp = 0,
+                type = CharacterType.PALADIN
+            ) { damages }
             wizard.attackDamage shouldBe 50
         }
 
@@ -30,7 +37,13 @@ class GameTest : StringSpec() {
 
         "Characters receiving damages are reducing them depending on their resistance" {
             // Notice how I'm using named parameters to give more insights about what I add in the code base
-            val wizard = Character(power = 10, damages = 5, resistance = 2, hp = 0)
+            val wizard = Character(
+                power = 10,
+                damages = 5,
+                resistance = 2,
+                hp = 0,
+                type = CharacterType.PALADIN
+            ) { damages }
             wizard.reducedDamage(50) shouldBe 25
         }
 
@@ -38,7 +51,7 @@ class GameTest : StringSpec() {
         // We'll write a test to define our rule! In our example, we'll go for rounded down numbers.
 
         "Damages received by the characters are rounded down" {
-            val wizard = Character(10, 5, 2, 0)
+            val wizard = Character(10, 5, 2, 0, CharacterType.PALADIN) { damages }
             wizard.reducedDamage(9) shouldBe 4
         }
 
@@ -47,7 +60,7 @@ class GameTest : StringSpec() {
         // In our case, we'll just apply all the damages (for the example).
 
         "Characters with no resistance will receive all the damages dealt" {
-            val wizard = Character(10, 5, 0, 0)
+            val wizard = Character(10, 5, 0, 0, CharacterType.PALADIN) { damages }
             wizard.reducedDamage(50) shouldBe 50
         }
 
@@ -55,7 +68,7 @@ class GameTest : StringSpec() {
         // Let's implement it right now.
 
         "Characters receiving damages will lose HPs accordingly" {
-            val wizard = Character(10, 5, 2, 100)
+            val wizard = Character(10, 5, 2, 100, CharacterType.PALADIN) { damages }
             // Notice that we now have a decision to make about our API!
             // Should we have a method taking as an input the reduced damages, and only work on the HP,
             // Or should we have a method taking the raw damages and actually calling the reduction damage function?
@@ -72,7 +85,7 @@ class GameTest : StringSpec() {
         // Will it go below 0? Let's write a test to state that.
 
         "Characters receiving more damages than their HP will end with 0 hp left" {
-            val wizard = Character(10, 5, 2, 100)
+            val wizard = Character(10, 5, 2, 100, CharacterType.PALADIN) { damages }
             wizard.receiveDamage(2000) shouldBe wizard.copy(hp = 0)
         }
 
@@ -88,8 +101,8 @@ class GameTest : StringSpec() {
         // Let's simply write a test to illustrate the design:
 
         "A battle should allow to generate the next round of the fight opposing the characters" {
-            val wizard = Character(10, 5, 2, 100)
-            val paladin = Character(10, 5, 2, 100)
+            val wizard = Character(10, 5, 2, 100, CharacterType.PALADIN) { damages }
+            val paladin = Character(10, 5, 2, 100, CharacterType.PALADIN) { damages }
             val battle = Battle(wizard, paladin)
 
             // And here we'll define our design. Basically, we'll have an object defining a Round, containing our
@@ -104,8 +117,8 @@ class GameTest : StringSpec() {
         // Let's go with baby steps (which we can refactor later) to illustrate what we do:
 
         "The first step of the round resolution should apply the damages from the first player to the second" {
-            val wizard = Character(10, 5, 2, 100)
-            val paladin = Character(10, 5, 2, 100)
+            val wizard = Character(10, 5, 2, 100, CharacterType.PALADIN) { damages }
+            val paladin = Character(10, 5, 2, 100, CharacterType.PALADIN) { damages }
             // We'll directly create our Round object for the tests to concentrate on what we want to validate
             val round = Round(wizard, paladin)
 
@@ -123,8 +136,8 @@ class GameTest : StringSpec() {
         // Those are the same rules, so let's implement a test!
 
         "The second step of the round resolution should apply the damages from the second player to the second" {
-            val wizard = Character(10, 5, 2, 100)
-            val paladin = Character(10, 5, 2, 100)
+            val wizard = Character(10, 5, 2, 100, CharacterType.PALADIN) { damages }
+            val paladin = Character(10, 5, 2, 100, CharacterType.PALADIN) { damages }
             // We'll directly create our Round object for the tests to concentrate on what we want to validate
             val round = Round(wizard, paladin)
 
@@ -140,8 +153,8 @@ class GameTest : StringSpec() {
         // just after!
 
         "The resolution of a round should return the state of both characters after they applied damages to each others" {
-            val wizard = Character(10, 5, 2, 100)
-            val paladin = Character(10, 5, 2, 100)
+            val wizard = Character(10, 5, 2, 100, CharacterType.PALADIN) { damages }
+            val paladin = Character(10, 5, 2, 100, CharacterType.PALADIN) { damages }
             // We'll directly create our Round object for the tests to concentrate on what we want to validate
             val round = Round(wizard, paladin)
 
@@ -155,9 +168,9 @@ class GameTest : StringSpec() {
         // Let's quickly fix that with just another test to be sure!
 
         "The resolution of a round should return the state of both characters after they applied the correct damages to each others" {
-            val wizard = Character(10, 5, 2, 100)
+            val wizard = Character(10, 5, 2, 100, CharacterType.PALADIN) { damages }
             // I'll just change some values from the paladin
-            val paladin = Character(4, 2, 1, 80)
+            val paladin = Character(4, 2, 1, 80, CharacterType.PALADIN) { damages }
             // We'll directly create our Round object for the tests to concentrate on what we want to validate
             val round = Round(wizard, paladin)
 
@@ -183,7 +196,7 @@ class GameTest : StringSpec() {
         // I'd like to know its status. For this, I need to know if Characters are still alive... Let's code that!
 
         "A character with 0 HPs is considered dead, otherwise it is alive" {
-            val wizard = Character(10, 5, 2, 100)
+            val wizard = Character(10, 5, 2, 100, CharacterType.PALADIN) { damages }
             wizard.isAlive shouldBe true
             wizard.receiveDamage(100).isAlive shouldBe false
         }
@@ -192,8 +205,8 @@ class GameTest : StringSpec() {
         // A round will be considered final if at least one character dies.
 
         "A round is final if at least one character dies" {
-            val wizard = Character(10, 5, 2, 0)
-            val paladin = Character(10, 5, 2, 50)
+            val wizard = Character(10, 5, 2, 0, CharacterType.PALADIN) { damages }
+            val paladin = Character(10, 5, 2, 50, CharacterType.PALADIN) { damages }
             val finalRound = Round(wizard, paladin)
 
             finalRound.isFinal shouldBe true
@@ -205,7 +218,7 @@ class GameTest : StringSpec() {
         // Hey! Time to decide what to do if both character die!
         // In a first place, we'd just say that we consider it as final round as well.
         "A round is final if both character die" {
-            val paladin = Character(10, 5, 2, 0)
+            val paladin = Character(10, 5, 2, 0, CharacterType.PALADIN) { damages }
             val tieRound = Round(paladin, paladin)
             tieRound.isFinal shouldBe true
         }
@@ -217,13 +230,13 @@ class GameTest : StringSpec() {
         // in the Round class, and actually implement it
 
         "The next round of a final round is itself" {
-            val paladin = Character(10, 5, 2, 0)
+            val paladin = Character(10, 5, 2, 0, CharacterType.PALADIN) { damages }
             val finalRound = Round(paladin, paladin)
             finalRound.nextRound() shouldBe finalRound
         }
 
         "The next round of a non final round should be a round starting from the resolution of the current one" {
-            val paladin = Character(10, 2, 1, 100)
+            val paladin = Character(10, 2, 1, 100, CharacterType.PALADIN) { damages }
             val round = Round(paladin, paladin)
             round.nextRound() shouldBe Round(paladin.receiveDamage(20), paladin.receiveDamage(20))
         }
@@ -233,7 +246,7 @@ class GameTest : StringSpec() {
         // Let's add that in the battle!
 
         "A battle should contain the rounds required for the fight" {
-            val paladin = Character(10, 2, 1, 100)
+            val paladin = Character(10, 2, 1, 100, CharacterType.PALADIN) { damages }
             val battle = Battle(paladin, paladin)
             battle.rounds shouldBe listOf()
         }
@@ -244,7 +257,7 @@ class GameTest : StringSpec() {
         // is a battle with one more round in it.
 
         "The next state of a new battle is a battle with one round stored" {
-            val paladin = Character(10, 2, 1, 100)
+            val paladin = Character(10, 2, 1, 100, CharacterType.PALADIN) { damages }
             val battle = Battle(paladin, paladin)
             battle.nextState() shouldBe battle.copy(rounds = listOf(Round(paladin, paladin)))
         }
@@ -253,7 +266,7 @@ class GameTest : StringSpec() {
         // rounds in the list
 
         "The next state of an ongoing battle is a battle with several rounds stored" {
-            val paladin = Character(10, 2, 1, 100)
+            val paladin = Character(10, 2, 1, 100, CharacterType.PALADIN) { damages }
             val battle = Battle(paladin, paladin)
             battle.nextState() shouldBe battle.copy(rounds = listOf(Round(paladin, paladin)))
             battle.nextState().nextState() shouldBe battle.copy(
@@ -267,7 +280,7 @@ class GameTest : StringSpec() {
         // One more baby step, the next state of a battle which reached a final round is the really same battle
 
         "The next state of a battle reaching a final round is the same battle" {
-            val paladin = Character(10, 2, 1, 20)
+            val paladin = Character(10, 2, 1, 20, CharacterType.PALADIN) { damages }
             val battle = Battle(paladin, paladin)
             battle.nextState().nextState().nextState() shouldBe battle.copy(
                 rounds = listOf(
@@ -286,7 +299,7 @@ class GameTest : StringSpec() {
         // Okay, let's start with identifying more easily when a battle is over
 
         "A battle is over when its last round is a final one" {
-            val paladin = Character(10, 2, 1, 0)
+            val paladin = Character(10, 2, 1, 0, CharacterType.PALADIN) { damages }
             val battle = Battle(paladin, paladin)
             battle.isOver() shouldBe false
             battle.nextState().isOver() shouldBe true
@@ -301,7 +314,7 @@ class GameTest : StringSpec() {
         // Let's start with a tie: if both characters died.
 
         "The result of a finished battle with 2 dead characters is a tie" {
-            val paladin = Character(10, 2, 1, 0)
+            val paladin = Character(10, 2, 1, 0, CharacterType.PALADIN) { damages }
             val battle = Battle(paladin, paladin)
             battle.nextState().result() shouldBe Battle.Result.TIE
         }
@@ -309,8 +322,8 @@ class GameTest : StringSpec() {
         // If only one of the characters dies, this is a victory!
 
         "The result of a finished battle with only 1 dead character is a victory" {
-            val paladin = Character(10, 2, 1, 0)
-            val wizard = Character(10, 2, 1, 1000)
+            val paladin = Character(10, 2, 1, 0, CharacterType.PALADIN) { damages }
+            val wizard = Character(10, 2, 1, 1000, CharacterType.PALADIN) { damages }
             val battle = Battle(paladin, wizard)
             battle.nextState().result() shouldBe Battle.Result.VICTORY
         }
@@ -320,8 +333,8 @@ class GameTest : StringSpec() {
         // here to understand the progression)
 
         "If the result is a victory, it should allow to retrieve the winner" {
-            val paladin = Character(10, 2, 1, 0)
-            val wizard = Character(10, 2, 1, 1000)
+            val paladin = Character(10, 2, 1, 0, CharacterType.PALADIN) { damages }
+            val wizard = Character(10, 2, 1, 1000, CharacterType.PALADIN) { damages }
             val battle = Battle(paladin, wizard)
             battle.nextState().results() shouldBe Battle.Results.Victory(wizard)
         }
@@ -329,19 +342,19 @@ class GameTest : StringSpec() {
         // We now have a new structure, so let's just ensure we have everything else working in it
 
         "If no characters is left alive, the results of the battle should be a tie" {
-            val paladin = Character(10, 2, 1, 0)
+            val paladin = Character(10, 2, 1, 0, CharacterType.PALADIN) { damages }
             val battle = Battle(paladin, paladin)
             battle.nextState().results() shouldBe Battle.Results.Tie
         }
 
         "If no characters is dead yet, the results of the battle should be ongoing" {
-            val paladin = Character(10, 2, 1, 1000)
+            val paladin = Character(10, 2, 1, 1000, CharacterType.PALADIN) { damages }
             val battle = Battle(paladin, paladin)
             battle.nextState().results() shouldBe Battle.Results.Ongoing
         }
 
         "If no rounds are generated yet, the battle results should be not started" {
-            val paladin = Character(10, 2, 1, 0)
+            val paladin = Character(10, 2, 1, 0, CharacterType.PALADIN) { damages }
             val battle = Battle(paladin, paladin)
             battle.results() shouldBe Battle.Results.NotStarted
         }
@@ -369,5 +382,80 @@ class GameTest : StringSpec() {
             multiplier(CharacterType.PALADIN, CharacterType.WIZARD) shouldBe 1.0
             multiplier(CharacterType.WIZARD, CharacterType.ROGUE) shouldBe 1.0
         }
+
+        // Now that we have one method to actually calculate the multiplier, we need to integrate it in the
+        // actual damage calculation. Again, refactoring would be needed here, but since we aim at
+        // writing a complete guide with all steps, we'll just create a new method for that, and test it.
+
+        // Baby step again?
+        // Let's maybe start by adding the character type in the character objects ;)
+
+        "Characters with advantages on another type should deal more damages to them" {
+            val paladin = Character(10, 2, 1, 100, CharacterType.PALADIN) { damages }
+            val wizard = Character(10, 2, 1, 100, CharacterType.WIZARD) { damages }
+
+            val paladinDamages = paladin.amplifiedAttackDamages(multiplier(CharacterType.PALADIN, CharacterType.WIZARD))
+            val wizardDamages = wizard.amplifiedAttackDamages(multiplier(CharacterType.WIZARD, CharacterType.PALADIN))
+
+            wizardDamages shouldBeGreaterThan paladinDamages
+            wizardDamages shouldBe 30
+        }
+
+        // Really nice, now we know the actual damages of characters depending on their types.
+        // Let's plug that in the game system!
+        // See that it's again an interesting moment where we'll actually have to figure out when exactly that damage
+        // amplification is supposed to happen! (before or after damage reduction?)
+
+        // Again, because we didn't do any refactoring yet, we'll just introduce yet another function
+        // to illustrate our progress
+
+        "Damage amplification between different characters' type is happening before damage reduction phase" {
+            val paladin = Character(10, 2, 1, 100, CharacterType.PALADIN) { damages }
+            val wizard = Character(10, 2, 1, 100, CharacterType.WIZARD) { damages }
+            val round = Round(wizard, paladin)
+
+            round.completeResolution() shouldBe Pair(wizard.copy(hp = 80), paladin.copy(hp = 70))
+        }
+
+        // We're almost done! One good thing now would be to have a function allowing us to directly get
+        // the complete resolution of a battle. Cause right now we need to call nextState until we reach the final
+        // state of the battle.
+        // Let's fix that!
+
+        "Solving a battle allows to directly reach its final state" {
+            val paladin = Character(10, 2, 1, 60, CharacterType.PALADIN) { damages }
+            val wizard = Character(10, 2, 1, 40, CharacterType.WIZARD) { damages }
+            val battle = Battle(paladin, wizard)
+
+            battle.solve().isOver() shouldBe true
+            battle.solve().results() shouldBe Battle.Results.Tie
+            battle.solve().rounds.size shouldBe 3
+        }
+
+        // That's it! We almost have the job complete!
+        // The only thing we miss right now is (of course) some major refactoring,
+        // But also something allowing us to have random damages in a range!
+        // Remember it was something we identified as complicated for test reasons...
+        // So we need to find a nice and proper way to introduce that!
+
+        // First, we would need to have damages to be a range instead of a fix value...
+        // We'll obviously do that in the refactoring, but for now let's forget about it.
+
+        // In order to isolate the use of random numbers, we'll just introduce a way of retrieving the actual damages!
+
+        "Characters should propose a way to retrieve the actual damages they're dealing" {
+            val paladin = Character(10, 2, 1, 60, CharacterType.PALADIN) { damages }
+
+            paladin.myDamages(paladin) shouldBe 2
+        }
+
+        // Of course, some default implementation would be required to have the random,
+        // But we do not need to test the random generation because it's just part of Kotlin!
+        // We just need to ensure that we have a way to override the default random behavior in our tests!
+        // Which is done here by passing a function allowing to fix the actual pick of damages.
+
+        // The final plug into the whole system if just a matter of refactoring, which obviously should have happen way
+        // before.
+        // But at least we've got the whole thinking process in one file!
     }
 }

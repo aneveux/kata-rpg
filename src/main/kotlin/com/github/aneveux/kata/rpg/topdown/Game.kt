@@ -14,12 +14,21 @@ fun multiplier(firstCharacterType: CharacterType, secondCharacterType: Character
         else -> 1.0
     }
 
-data class Character(val power: Int, val damages: Int, val resistance: Int, val hp: Int) {
+data class Character(
+    val power: Int,
+    val damages: Int,
+    val resistance: Int,
+    val hp: Int,
+    val type: CharacterType,
+    val myDamages: Character.() -> Int
+) {
     val attackDamage
         get() = power * damages
 
     val isAlive
         get() = hp > 0
+
+    fun amplifiedAttackDamages(multiplier: Double) = (attackDamage * multiplier).toInt()
 
     fun reducedDamage(damage: Int) = if (resistance == 0) damage else damage / resistance
 
@@ -39,7 +48,18 @@ data class Battle(val firstPlayer: Character, val secondPlayer: Character, val r
         )
     ) else if (rounds.last().isFinal) this else copy(rounds = rounds.plusElement(rounds.last().nextRound()))
 
+    fun nextCompleteState() = if (rounds.isEmpty()) copy(
+        rounds = listOf(
+            Round(
+                firstPlayer,
+                secondPlayer
+            )
+        )
+    ) else if (rounds.last().isFinal) this else copy(rounds = rounds.plusElement(rounds.last().nextCompleteRound()))
+
     fun isOver() = rounds.isNotEmpty() && rounds.last().isFinal
+
+    fun solve(): Battle = if (isOver()) this else nextCompleteState().solve()
 
     enum class Result {
         TIE, ONGOING, VICTORY
@@ -85,9 +105,20 @@ data class Round(val firstPlayer: Character, val secondPlayer: Character) {
     // allowing me to have a simple function describing a character being hit by another one
     private fun Character.hitBy(opponent: Character) = receiveDamage(reducedDamage(opponent.attackDamage))
 
+    private fun Character.multipliedHitBy(opponent: Character) = receiveDamage(
+        reducedDamage(
+            opponent.amplifiedAttackDamages(
+                multiplier(opponent.type, this.type)
+            )
+        )
+    )
+
     // For our baby steps example, I'll reuse the functions I wrote earlier.
     // You'll see that the result isn't the best looking code, so it'll obviously indicate that refactoring is needed!
     fun resolution() = firstPlayer.hitBy(secondPlayer) to secondPlayer.hitBy(firstPlayer)
 
+    fun completeResolution() = firstPlayer.multipliedHitBy(secondPlayer) to secondPlayer.multipliedHitBy(firstPlayer)
+
     fun nextRound() = if (isFinal) this else with(this.resolution()) { Round(first, second) }
+    fun nextCompleteRound() = if (isFinal) this else with(this.completeResolution()) { Round(first, second) }
 }
