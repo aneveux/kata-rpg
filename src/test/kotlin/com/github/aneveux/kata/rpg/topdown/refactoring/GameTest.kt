@@ -1,7 +1,7 @@
-package com.github.aneveux.kata.rpg.refactoring
+package com.github.aneveux.kata.rpg.topdown.refactoring
 
-import com.github.aneveux.kata.rpg.refactoring.Battle.Results.*
-import com.github.aneveux.kata.rpg.refactoring.CharacterType.*
+import com.github.aneveux.kata.rpg.topdown.refactoring.Battle.Results.*
+import com.github.aneveux.kata.rpg.topdown.refactoring.CharacterType.*
 import io.kotlintest.matchers.numerics.shouldBeGreaterThan
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec

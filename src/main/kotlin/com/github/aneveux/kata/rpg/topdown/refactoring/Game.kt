@@ -1,4 +1,4 @@
-package com.github.aneveux.kata.rpg.refactoring
+package com.github.aneveux.kata.rpg.topdown.refactoring
 
 enum class CharacterType {
     PALADIN, ROGUE, WIZARD;
