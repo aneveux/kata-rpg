@@ -1,43 +1,95 @@
-# Simple RPG Kata
+<div align="center">
+ <img width=200px height=200px src="img/icon.png" alt="RPG Simple Kata" />
+</div>
 
-This simple programming kata aims at demonstrating some aspects of eXtreme Programming techniques, especially how important it is to build things in an iterative way.
+<h3 align="center">Code Kata - Simple RPG</h3>
 
-It relies on a simple specification inspired from RPG games, with easy to understand, yet not so easy to design game rules.
+<div align="center">
 
-## Rules
+  [![Status](https://img.shields.io/badge/status-active-success.svg)]() 
+  [![GitHub Issues](https://img.shields.io/github/issues/aneveux/kata-rpg.svg)](https://github.com/aneveux/kata-rpg/issues)
+  [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/aneveux/kata-rpg.svg)](https://github.com/aneveux/kata-rpg/pulls)
+  [![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
 
-The simple RPG game you're implementing allows to simulate the battle between 2 different characters to define the winner.
+</div>
 
-There are 3 types of characters: Paladins, Rogues, and Wizards. Paladins are stronger than Rogues, which are stronger than Wizards, which themselves are stronger than Paladins.
+---
 
-Defining who's winning a fight is really easy: characters only have one attack which deals a range of damage (for example, Rogues' attacks will deal from 5 to 8 damages). Those damages will be increased depending on the character's power, but lowered by the opponent's resistance.
+<p align="center">
+This <i>Simple RPG</i> project is a <a href="https://en.wikipedia.org/wiki/Kata_(programming)">Code Kata</a> exercise one can use to experiment different coding techniques. It is provided with a few slides about <a href="https://en.wikipedia.org/wiki/Extreme_Programming">eXtreme Programming</a> to promote TDD practices.
+</p>
 
-The attacks are done simultaneously, which means equivalent characters may die together during the fight.
+## 📝 Table of Contents
+- [About](#about)
+- [Getting Started](#getting_started)
+- [Deployment](#deployment)
+- [Built Using](#built_using)
+- [TODO](TODO.md)
+- [Contributing](CONTRIBUTING.md)
+- [Authors](#authors)
+- [Acknowledgments](#acknowledgement)
 
-The formula we'll be using for the attack is the following one:
+## 🧐 About <a name = "about"></a>
 
-```
-total_damage = (attack_damage * attacker_power) / defenser_resistance  
-```
+This *Code Kata* exercise is just a small specification for a program one could write to experiment different coding techniques. It's a rather simple and fun program to write, but the specification has some intended pitfalls so developers have to take a couple decisions along the exercise to complete their implementation.
 
-As we said earlier, some types of characters are stronger against other types, which means they'll deal 50% more damages against them.
+This whole project has been designed and used for a presentation of some *eXtreme Programming* techniques, with a particular focus on *Test Driven Development*. It is provided with a slide deck which has been used to present either *eXtreme Programming* and the results of the coding exercise.
 
-For example, if a Wizard is attacking a Paladin, it'll deal:
+On top of that, you'll find in that repository a *Kotlin* project containing various implementations of the problem: a completely naive solution, with no tests written, which is just basically trying to make the program work as fast as possible; a top down TDD implementation, with comments and step by step approach (with no refactoring to try to keep the evolution of the code); and finally, a refactored version of the top down TDD approach.
 
-```
-total_damage = (attack_damage * attacker_power * 1.5) / defenser_resistance
-```
+## 🏁 Getting Started <a name = "getting_started"></a>
 
-Each attack is removing HPs to the defenser character, and the fight is over when at least one character dies. If one character remains alive, it's the winner of the fight.
+If you'd like to practice your development techniques, feel free to have a look at the [specifications](RULES.md) written for the code kata, choose your favourite programming language, and go for it! There's nothing more than just experimenting and getting better at programming!
 
-## New need! Some additional rules!
+If you'd like to reuse the presentation about eXtreme Programming, a published and packaged version is available in the `docs/` folder: simply open the `index.html` file with your favourite browser, and you should be good to go.
 
-It's time to get the benefits of your clean code! Here are some new rules to implement!
+If you'd like to play a bit with Kotlin, either writting your own program or modifying the one we wrote, you can simply import the project in your IDE (it is a Maven project, so all dependencies should be retrieved for your if you have Maven installed).
 
-Characters now have special abilities depending on their types! They may cast spells which are helping them during their fights!
+### Prerequisites
 
-Wizard have a 20% chance to heal 10% of their HPs each time they attack.
+If you want to play with our Kotlin implementation, we recommend you to have:
 
-Paladins have a 20% chance to double their resistance each time they defend.
+- [OpenJDK](https://openjdk.java.net/)
+- [Maven](https://maven.apache.org/)
+- [IntelliJ IDEA](https://www.jetbrains.com/idea/) - *the Community edition is fine*
 
-Rogues have a 20% chance to double their damages each time they attack.
+And you shouldn't need more than this.
+
+Otherwise, you can go ahead and write some code with your favourite language and tools.
+
+## 🔧 Running the tests <a name = "tests"></a>
+
+Unit Tests are provided for the top down TDD implementation we wrote in Kotlin. You can execute them using maven with the following command: `mvn test`, or directly from your IDE.
+
+## 🚀 Deployment <a name = "deployment"></a>
+
+If you'd like to modify the slides and generate a new version out of them, you'll find the source code from the slides in `slides.md` (which is just markdown) and you can generate slides out of that file easily by using [reveal-md](https://github.com/webpro/reveal-md).
+
+Simply run `reveal-md slides.md --static docs --static-dirs img` or execute the `publish.sh` shell script provided in that repository.
+
+## ⛏️ Built Using <a name = "built_using"></a>
+
+Our implementation is written with:
+
+- [Kotlin](https://kotlinlang.org/)
+- [KotlinTest](https://github.com/kotlintest/kotlintest)
+
+Our slides are written with:
+
+- [reveal-md](https://github.com/webpro/reveal-md)
+
+## ✍️ Authors <a name = "authors"></a>
+
+- [@aneveux](https://github.com/aneveux)
+- [@jmdesprez](https://github.com/jmdesprez)
+
+See also the list of [contributors](https://github.com/aneveux/kata-rpg/contributors) who participated in this project.
+
+## 🎉 Acknowledgements <a name = "acknowledgement"></a>
+
+Thanks a lot to all those projects we used at some point:
+
+- [RevealJS](https://revealjs.com/#/)
+- [reveal-md](https://github.com/webpro/reveal-md)
+- [KotlinTest](https://github.com/kotlintest/kotlintest)
+- [The Documentation Compendium](https://github.com/kylelobo/The-Documentation-Compendium/)
