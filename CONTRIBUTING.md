@@ -1,6 +1,6 @@
 # Contributing Guide
 
-- Contributing to this project is fairly easy. This document shows you how to get started
+Contributing to this project is fairly easy. This document shows you how to get started.
 
 ## General
 
