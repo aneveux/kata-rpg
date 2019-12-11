@@ -45,6 +45,8 @@ If you'd like to reuse the presentation about eXtreme Programming, a published a
 
 If you'd like to play a bit with Kotlin, either writting your own program or modifying the one we wrote, you can simply import the project in your IDE (it is a Maven project, so all dependencies should be retrieved for your if you have Maven installed).
 
+If you'd like to follow the development process I followed while solving the exercise, feel free to read the comments in [that test file](src/test/kotlin/com/github/aneveux/kata/rpg/topdown/GameTest.kt).
+
 ### Prerequisites
 
 If you want to play with our Kotlin implementation, we recommend you to have:
