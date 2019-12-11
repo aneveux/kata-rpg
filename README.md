@@ -33,7 +33,7 @@ This <i>Simple RPG</i> project is a <a href="https://en.wikipedia.org/wiki/Kata_
 
 This *Code Kata* exercise is just a small specification for a program one could write to experiment different coding techniques. It's a rather simple and fun program to write, but the specification has some intended pitfalls so developers have to take a couple decisions along the exercise to complete their implementation.
 
-This whole project has been designed and used for a presentation of some *eXtreme Programming* techniques, with a particular focus on *Test Driven Development*. It is provided with a slide deck which has been used to present either *eXtreme Programming* and the results of the coding exercise.
+This whole project has been designed and used for a presentation of some *eXtreme Programming* techniques, with a particular focus on *Test Driven Development*. It is provided with a [slide deck](https://aneveux.github.io/kata-rpg/#/) which has been used to present either *eXtreme Programming* and the results of the coding exercise.
 
 On top of that, you'll find in that repository a *Kotlin* project containing various implementations of the problem: a completely naive solution, with no tests written, which is just basically trying to make the program work as fast as possible; a top down TDD implementation, with comments and step by step approach (with no refactoring to try to keep the evolution of the code); and finally, a refactored version of the top down TDD approach.
 
